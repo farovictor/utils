@@ -9,6 +9,12 @@ POD_LOG_FORMAT = "%(filename)s:%(lineno)d %(levelname)s - %(message)s"
 # Formatter recommended for debugging process
 BASIC_LOG_FORMAT = "[%(asctime)s] %(filename)s:%(lineno)d %(log_color)s%(levelname)s%(reset)s - %(message)s"
 
+# Formatter for thread debugging (dispatchers)
+THREAD_LOG_FORMAT = "[%(asctime)s] T-%(thread)d %(filename)s:%(lineno)d %(log_color)s%(levelname)s%(reset)s - %(message)s"
+
+# Formatter for process debugging (dispatchers)
+PROCESS_LOG_FORMAT = "[%(asctime)s] P-%(process)d %(filename)s:%(lineno)d %(log_color)s%(levelname)s%(reset)s - %(message)s"
+
 # Log level (color) table
 LOG_COLORS = {
     "DEBUG": "bold_cyan",
@@ -35,6 +41,18 @@ LOG_CONFIG = {
             "format": getenv("ENVVAR_LOG_FORMATTER", BASIC_FORMAT),
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
+        "thread_format": {
+            "()": "colorlog.ColoredFormatter",
+            "format": THREAD_LOG_FORMAT,
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+            "log_colors": LOG_COLORS,
+        },
+        "process_format": {
+            "()": "colorlog.ColoredFormatter",
+            "format": PROCESS_LOG_FORMAT,
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+            "log_colors": LOG_COLORS,
+        },
     },
     "handlers": {
         "default": {
@@ -49,6 +67,14 @@ LOG_CONFIG = {
             "class": "logging.StreamHandler",
             "formatter": "envvar_format",
         },
+        "console_thread": {
+            "class": "logging.StreamHandler",
+            "formatter": "thread_format",
+        },
+        "console_process": {
+            "class": "logging.StreamHandler",
+            "formatter": "process_format",
+        },
     },
     "root": {  # Applies to the root logger, covering all logs
         "level": "INFO",
@@ -61,16 +87,26 @@ LOG_CONFIG = {
             "handlers": ["default"],
             "propagate": False,
         },
-        # This is the logger intended for airflow pods
-        "airflow.pod": {
+        # This is the logger intended for kubernetes pods
+        "pod.handler": {
             "level": "INFO",
-            "handlers": ["console_airflow"],
+            "handlers": ["console_pod"],
             "propagate": False,
         },
         # This is a custom logger. It uses the format passed through env var: ENVVAR_LOG_FORMATTER
         "envvar.handler": {
             "level": "INFO",
             "handlers": ["console_envvar"],
+            "propagate": False,
+        },
+        "thread.handler": {
+            "level": "INFO",
+            "handlers": ["console_thread"],
+            "propagate": False,
+        },
+        "process.handler": {
+            "level": "INFO",
+            "handlers": ["console_process"],
             "propagate": False,
         },
     },

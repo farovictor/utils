@@ -1,6 +1,9 @@
 # Missing Implementations
 
-## Concurrent Workers - To Implement
+## Parallel Workers
+- [ ] To implement async calls
+## Concurrent Workers
+- [ ] To implement async calls
 
 ## Create a agentic workflow to autodoc project - To Implement
 

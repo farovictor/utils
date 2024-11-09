@@ -48,11 +48,3 @@ class ProcessRunner:
 
     def _collect(self, results: List[AsyncResult]) -> List:
         self.results = [result.get() for result in results]
-
-    @property
-    def results(self) -> List:
-        return self._results
-
-    @results.setter
-    def results(self, values: List[AsyncResult]):
-        self._results = values

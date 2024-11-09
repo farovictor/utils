@@ -14,3 +14,7 @@ run-linters: prepare-linters
 .PHONY: run-tests
 run-tests:
 	PYTHONPATH=. poetry run pytest --cov
+
+.PHONY: run-examples
+run-examples:
+	PYTHONPATH=. poetry run python ./examples/workers.py
