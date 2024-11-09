@@ -10,3 +10,7 @@ prepare-linters:
 .PHONY: run-linters
 run-linters: prepare-linters
 	poetry run pre-commit run -a
+
+.PHONY: run-tests
+run-tests:
+	PYTHONPATH=. poetry run pytest --cov
