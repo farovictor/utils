@@ -5,9 +5,10 @@ from typing import Callable
 from typing import List
 
 from core.logger.log import get_logger
+from core.workers.base import Runner
 
 
-class ProcessRunner:
+class ProcessRunner(Runner):
 
     logger = get_logger(__name__)
 
@@ -38,13 +39,6 @@ class ProcessRunner:
                 results = pool.map(self.callables, self.op_kwargs)
 
             self._collect(results)
-
-    def __enter__(self):
-        self.execute()
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        return False
 
     def _collect(self, results: List[AsyncResult]) -> List:
         self.results = [result.get() for result in results]
