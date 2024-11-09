@@ -15,27 +15,27 @@ class ProcessRunner:
         self,
         num_workers: int,
         callables: Callable | List[Callable],
-        lop_kwargs: List,
+        op_kwargs: List,
         *args,
         **kwargs
     ):
         self.nw = num_workers
-        self.lop_callables = callables
-        self.lop_kwargs = lop_kwargs
+        self.callables = callables
+        self.op_kwargs = op_kwargs
         self.results = []
 
     def execute(self):
         with Pool(processes=self.nw) as pool:
-            if isinstance(self.lop_callables, List):
+            if isinstance(self.callables, List):
                 self.logger.debug("Multible callabes passed.")
                 results: List[AsyncResult] = [
                     pool.apply_async(func=fn, kwds=kwargs)
-                    for fn, kwargs in zip(self.lop_callables, self.lop_kwargs)
+                    for fn, kwargs in zip(self.callables, self.op_kwargs)
                 ]
                 pool.close()
                 pool.join()
             else:
-                results = pool.map(self.lop_callables, self.lop_kwargs)
+                results = pool.map(self.callables, self.op_kwargs)
 
             self._collect(results)
 

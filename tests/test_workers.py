@@ -17,6 +17,6 @@ def test_parallel_workers():
     with ProcessRunner(
         num_workers=1,
         callables=[figure, figure],
-        lop_kwargs=[{"alice": True}, {"alice": False}],
+        op_kwargs=[{"alice": True}, {"alice": False}],
     ) as runner:
         assert runner.results == [True, False]
