@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import asyncio
 from abc import ABC
 from abc import abstractmethod
 from typing import List
@@ -28,3 +29,11 @@ class Runner(ABC):
     @results.setter
     def results(self, values: List):
         self._results = values
+
+    def run_async_in_thread(async_func, *args, **kwargs):
+        """Wrapper to run an async function in the event loop"""
+        loop = asyncio.new_event_loop()
+        try:
+            return loop.run_until_complete(async_func(*args, **kwargs))
+        finally:
+            loop.close()
