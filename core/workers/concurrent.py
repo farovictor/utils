@@ -37,4 +37,8 @@ class ThreadRunner(Runner):
                 self._collect(tasks)
 
     def _collect(self, tasks: List[Future]) -> List:
-        self.results = [task.result() for task in tasks]
+        self.results = []
+        for task in tasks:
+            if isinstance(task, Future):
+                task = task.result()
+            self.results.append(task)
